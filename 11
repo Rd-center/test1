@@ -11,7 +11,7 @@ def iris_type(s):
     return it[s]
 
 #1.1加载数据
-data = np.loadtxt('/Desktop/iris.data',
+data = np.loadtxt('iris.data',
                  dtype=float,
                  delimiter=',',
                  converters={4:iris_type})
