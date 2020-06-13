@@ -1,0 +1,58 @@
+import numpy as np
+from matplotlib import colors
+from sklearn import svm
+from sklearn.svm import SVC
+from sklearn import model_selection
+import matplotlib.pyplot as plt
+import matplotlib as mplors
+#将字符串转为整型
+def iris_type(s):
+    it = {b'Iris-setosa':0,b'Iris-versicolor':1,b'Iris-virginica':2}
+    return it[s]
+
+#1.1加载数据
+data = np.loadtxt('/Desktop/iris.data',
+                 dtype=float,
+                 delimiter=',',
+                 converters={4:iris_type})
+
+
+#1.2数据分割
+x,y=np.split(data,
+            (4,),
+            axis=1)
+x=x[:, :2]
+x_train,x_test,y_train,y_test=model_salection.train_test_split(x,
+                                                              y,
+                                                              randon_state=1,
+                                                              test_size=0.3)
+#SVM分类器构建
+def classifier():
+    clf=svm.SVC(C=0.5,
+               kernel='linear',
+               decision_function_shape='ovr')
+    return clf
+#训练模型
+def train(clf,x_train,y_train):
+    clf.fit(x_train,
+           y_train.ravel())
+def print_accuracy(clf,x_train,y_train,x_test,y_test):
+    print('trianing prediction:%.3f'%(clf.score(x_train,y_train)))
+    print('test data prediction:%.3f'%(clf.score(x_test,y_test)))
+    
+    show_accuracy(clf.predict(x_train),y_train,'traing data')
+    show_accuracy(clf.predict(x_test),y_test,'testing data')
+    
+    print('decision_function:\n',clf.decision_function(x_train))
+#画图
+x1_min,x1_max=x[:,0].min(),x[:,0].max()
+x2_min,x2_max=x[:,1].min(),x[:,1].max()
+x1,x2=np.mgrid[x1_min:x1_max:200j,x2_min:x2_max:200j]
+grid_test=np.stack((x1.flat,x2.flat),axis=1)
+grid_hat=clf.predict(grid_test)
+print('grid_hat:\n',grid_hat)
+grid_hat=grid_hat.reshape(x1.shape)
+
+plt.pcolormesh(x1,x2,grid_hat,cmap=cm_light)
+plt.scatter(x[:,0],x[:,1],c=np.squeeze(y),edgecolor='k',s=50,cmap=cm_dark)
+plt.scatter(x_test[:,0],x_test[:,1],s=120,facecolor='none',zorder=10)
